@@ -34,7 +34,7 @@ In short, with multiple nodes, managing storage becomes challenging because of i
 
 ![0_exzQng3B8_iRzo6K](https://github.com/Gonelastvirus/NFS-shared_storage-k8s-cluster/assets/67478827/e219791f-ee82-446f-af8f-c050c88d8789)
 
-<b>if the node with NFS went down, the other node would obviously not be able to mount the volumes it needs.<b>
+<b>if the node with NFS went down, the other node would obviously not be able to mount the volumes it needs.</b>
 
 ![0_caZujI0tg6Nd_ix6](https://github.com/Gonelastvirus/NFS-shared_storage-k8s-cluster/assets/67478827/11c0fcf3-b976-4515-ba85-578e700084cf)
 
