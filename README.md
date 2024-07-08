@@ -117,7 +117,7 @@ If you see that message, you have successfully configured a Pod to use storage f
 
     # This assumes that your Node uses "sudo" to run commands
     # as the superuser
-    sudo mkdir /mnt/dat
+    sudo mkdir /mnt/data
     
 In the /mnt/data directory, create an index.html file:
 
