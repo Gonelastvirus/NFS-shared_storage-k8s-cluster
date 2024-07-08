@@ -66,10 +66,6 @@ Luckily there’s a pretty easy way to solve all of this. It’s called the Kube
 
 # Example of creating pod and using persistent volume  you just created running script
 In the NFS shared directory, create an index.html file:
-
-    # This again assumes that your Node uses "sudo" to run commands
-    # as the superuser
-    sudo sh -c "echo 'Hello from Kubernetes storage' > /mnt/data/index.html"
     
 Create a pod
 
