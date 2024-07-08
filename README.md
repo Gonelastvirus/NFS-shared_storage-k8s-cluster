@@ -18,11 +18,11 @@ When you start using multiple nodes in a Kubernetes cluster, storing data become
     If you have a single-node Kubernetes setup, storing data is easy. You can use a "host path" volume, which means the data is stored on the same machine as the application. So, if your app restarts, it always finds the data because everything is on the same node.
 
 <b>2. Multi-Node Setup:</b>
-    Things get complicated when you add more nodes. For example, if you have a two-node cluster:
+    Things get complicated when you add more nodes. For example, if you have a two-node cluster:<br>
       <b>  Issue 1: Volume Availability</b>
         Imagine you have an app running on node 1 with its data stored on node 1. If the app gets moved to node 2 (maybe node 1 is too busy), the app on node 2 can't find its data because the data is still on node 1.
             Example: You have a web app running on node 1 that stores images. If Kubernetes moves this app to node 2 due to high load on node 1, the app on node 2 won't find the images since they are still stored on node 1.
-      <b>  Issue 2: Scaling Problems</b>
+     <br> <b>  Issue 2: Scaling Problems</b>
         If you want to run multiple instances of the same app (one on each node), you face two problems:
             Unavailable Volume: The new instance on node 2 still can't access the data stored on node 1.
             Read-Write Restrictions: Even if the data is accessible from both nodes, only one instance can write to the volume at a time.
