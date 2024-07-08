@@ -198,7 +198,10 @@ The output shows the text that you wrote to the index.html file on the hostPath 
 
     Hello from Kubernetes storage
 
-   
+# REFRENCES
+https://medium.com/@askcloudarchitech/step-by-step-adding-shared-storage-to-a-kubernetes-cluster-c37302411b0d
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
+
 
 
 
