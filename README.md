@@ -1,4 +1,4 @@
-# NFS-shared_storage-k8s-cluster
+# Adding a Separate NAS for NFS-shared_storage-k8s-cluster
 When you run applications on a Kubernetes cluster, they typically need to store data permanently, not just temporarily in memory. Imagine you have a web server that needs to store user-uploaded files or a database that stores critical information. In Kubernetes, these applications can't rely on the local disk of the nodes (like the Mac Minis) because those disks are meant for temporary use.
 
 Instead, Kubernetes uses something called Persistent Volumes (PVs) to provide storage that persists even if your application moves to a different node or restarts. Think of it like renting a storage unit: your application asks Kubernetes for a "storage unit" (PV) where it can safely store data.
