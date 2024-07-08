@@ -42,7 +42,37 @@ In short, with multiple nodes, managing storage becomes challenging because of i
 # NFS To The Rescue!
 
 Luckily there’s a pretty easy way to solve all of this. It’s called the Kubernetes NFS provisioner (or NFS container storage interface). NFS servers have been around for forever and have provided a simple way for multiple workloads to connect to one disk. It even allows both workloads to read and write simultaneously. The NFS CSI allows a multi-node Kubernetes cluster to create and mount volumes that are backed by NFS. Installing and configuring the CSI is a one-time thing and after that, it’s completely transparent to the user of the cluster.
+
+# Below is Example output 
+
+<b>Look again at the PersistentVolume:</b>
+
+    kubectl get pv task-pv-volume
+
+<b>Now the output shows a STATUS of Bound.</b>
+
+    NAME             CAPACITY   ACCESSMODES   RECLAIMPOLICY   STATUS    CLAIM                   STORAGECLASS   REASON    AGE
+    task-pv-volume   10Gi       RWO           Retain          Bound     default/task-pv-claim   manual                   2m
+
+<b>Look at the PersistentVolumeClaim:</b>
+
+    kubectl get pvc task-pv-claim
+
+<b>The output shows that the PersistentVolumeClaim is bound to your PersistentVolume.</b>
+
+    NAME            STATUS    VOLUME           CAPACITY   ACCESSMODES   STORAGECLASS   AGE
+    task-pv-claim   Bound     task-pv-volume   10Gi       RWO           manual         30s
+
+
 # Example of creating pod and using persistent volume  you just created running script
+In the NFS shared directory, create an index.html file:
+
+    # This again assumes that your Node uses "sudo" to run commands
+    # as the superuser
+    sudo sh -c "echo 'Hello from Kubernetes storage' > /mnt/data/index.html"
+    
+Create a pod
+
     apiVersion: v1
     kind: Pod
     metadata:
@@ -69,6 +99,113 @@ Verify that the container in the Pod is running;
     kubectl get pod task-pv-pod
 
 
+Get a shell to the container running in your Pod:
+
+    kubectl exec -it task-pv-pod -- /bin/bash
+In your shell, verify that nginx is serving the index.html file from the hostPath volume:
+
+    # Be sure to run these 3 commands inside the root shell that comes from
+    # running "kubectl exec" in the previous step
+    apt update
+    apt install curl
+    curl http://localhost/
+The output shows the text that you wrote to the index.html file on the hostPath volume:
+
+    Hello from Kubernetes storage
+
+If you see that message, you have successfully configured a Pod to use storage from a PersistentVolumeClaim
+
+# You can create presistent volume locally like create /mnt/data directory
+
+    # This assumes that your Node uses "sudo" to run commands
+    # as the superuser
+    sudo mkdir /mnt/dat
+    
+In the /mnt/data directory, create an index.html file:
+
+    # This again assumes that your Node uses "sudo" to run commands
+    # as the superuser
+    sudo sh -c "echo 'Hello from Kubernetes storage' > /mnt/data/index.html"
+ Create persistent volume with path "/mnt/data"
+ 
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: task-pv-volume
+      labels:
+        type: local
+    spec:
+      storageClassName: manual
+      capacity:
+        storage: 10Gi
+      accessModes:
+        - ReadWriteOnce
+      hostPath:
+        path: "/mnt/data"
+        
+    kubectl apply -f https://k8s.io/examples/pods/storage/pv-volume.yaml
+<b>create persistent volume claim</b>
+
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: task-pv-claim
+    spec:
+      storageClassName: manual
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 3Gi
+    kubectl apply -f https://k8s.io/examples/pods/storage/pv-claim.yaml
+    
+Look again at the PersistentVolume:
+
+    kubectl get pv task-pv-volume
+    
+Create a pod
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: task-pv-pod
+    spec:
+      volumes:
+        - name: task-pv-storage
+          persistentVolumeClaim:
+            claimName: task-pv-claim
+      containers:
+        - name: task-pv-container
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: "http-server"
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: task-pv-storage
+     kubectl apply -f https://k8s.io/examples/pods/storage/pv-pod.yaml
+Get a shell to the container running in your Pod:
+
+    kubectl exec -it task-pv-pod -- /bin/bash
+
+In your shell, verify that nginx is serving the index.html file from the hostPath volume:
+
+    # Be sure to run these 3 commands inside the root shell that comes from
+    # running "kubectl exec" in the previous step
+    apt update
+    apt install curl
+    curl http://localhost/
+
+The output shows the text that you wrote to the index.html file on the hostPath volume:
+
+    Hello from Kubernetes storage
+
+   
+
+
+
+    
+        
 
 
 
