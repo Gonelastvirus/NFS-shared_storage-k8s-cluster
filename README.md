@@ -42,3 +42,33 @@ In short, with multiple nodes, managing storage becomes challenging because of i
 # NFS To The Rescue!
 
 Luckily there’s a pretty easy way to solve all of this. It’s called the Kubernetes NFS provisioner (or NFS container storage interface). NFS servers have been around for forever and have provided a simple way for multiple workloads to connect to one disk. It even allows both workloads to read and write simultaneously. The NFS CSI allows a multi-node Kubernetes cluster to create and mount volumes that are backed by NFS. Installing and configuring the CSI is a one-time thing and after that, it’s completely transparent to the user of the cluster.
+# Example of creating pod and using persistent volume  you just created running script
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: task-pv-pod
+    spec:
+      volumes:
+        - name: task-pv-storage
+          persistentVolumeClaim:
+            claimName: #persistent volume name you enter after running script
+      containers:
+        - name: task-pv-container
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: "http-server"
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: task-pv-storage
+              
+    kubectl apply -f https://k8s.io/examples/pods/storage/pv-pod.yaml
+    
+Verify that the container in the Pod is running;
+
+    kubectl get pod task-pv-pod
+
+
+
+
+
