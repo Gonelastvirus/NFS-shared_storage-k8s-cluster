@@ -43,6 +43,8 @@ In short, with multiple nodes, managing storage becomes challenging because of i
 
 Luckily there’s a pretty easy way to solve all of this. It’s called the Kubernetes NFS provisioner (or NFS container storage interface). NFS servers have been around for forever and have provided a simple way for multiple workloads to connect to one disk. It even allows both workloads to read and write simultaneously. The NFS CSI allows a multi-node Kubernetes cluster to create and mount volumes that are backed by NFS. Installing and configuring the CSI is a one-time thing and after that, it’s completely transparent to the user of the cluster.
 
+<b>Ok, now you have a pretty close replica of a Kubernetes cluster you would see in a production environment. Storage is separated from compute and all is right in the world.</b>
+
 # Below is Example output 
 
 <b>Look again at the PersistentVolume:</b>
