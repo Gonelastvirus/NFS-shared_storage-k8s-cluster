@@ -61,8 +61,8 @@ Luckily there’s a pretty easy way to solve all of this. It’s called the Kube
           volumeMounts:
             - mountPath: "/usr/share/nginx/html"
               name: task-pv-storage
-              
-    kubectl apply -f https://k8s.io/examples/pods/storage/pv-pod.yaml
+# s
+     kubectl apply -f https://k8s.io/examples/pods/storage/pv-pod.yaml
     
 Verify that the container in the Pod is running;
 
