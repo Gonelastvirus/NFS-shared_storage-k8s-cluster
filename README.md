@@ -7,7 +7,8 @@ For example, if you have a WordPress site running on Kubernetes, it needs to sto
 
 So, even if your WordPress container moves from one Mac Mini to another, it still connects to the same storage unit (PV) and can access all the saved blog posts and images without losing any data. This makes Kubernetes very flexible for managing applications that need to store data reliably.
 
-#The Issues with HostPath Storage
+# The Issues with HostPath Storage
+
 ![0_9kIL-QAzNQvER6O5](https://github.com/Gonelastvirus/NFS-shared_storage-k8s-cluster/assets/67478827/deb1093b-bb25-4ac7-b7cb-86f20c7a605a)
 ![0_jppxm88aKKQUQXaE](https://github.com/Gonelastvirus/NFS-shared_storage-k8s-cluster/assets/67478827/dab20d0f-2c9a-41ea-bcbc-9ad2eb166ac2)
 
@@ -29,13 +30,15 @@ When you start using multiple nodes in a Kubernetes cluster, storing data become
 
 In short, with multiple nodes, managing storage becomes challenging because of issues with data availability and write permissions.
 
-#Adding NFS to One of Your Nodes (not recommended)
+# Adding NFS to One of Your Nodes (not recommended)
+
 ![0_exzQng3B8_iRzo6K](https://github.com/Gonelastvirus/NFS-shared_storage-k8s-cluster/assets/67478827/e219791f-ee82-446f-af8f-c050c88d8789)
 
 <b>if the node with NFS went down, the other node would obviously not be able to mount the volumes it needs.<b>
+
 ![0_caZujI0tg6Nd_ix6](https://github.com/Gonelastvirus/NFS-shared_storage-k8s-cluster/assets/67478827/11c0fcf3-b976-4515-ba85-578e700084cf)
 
 
-#NFS To The Rescue!
+# NFS To The Rescue!
 
 Luckily there’s a pretty easy way to solve all of this. It’s called the Kubernetes NFS provisioner (or NFS container storage interface). NFS servers have been around for forever and have provided a simple way for multiple workloads to connect to one disk. It even allows both workloads to read and write simultaneously. The NFS CSI allows a multi-node Kubernetes cluster to create and mount volumes that are backed by NFS. Installing and configuring the CSI is a one-time thing and after that, it’s completely transparent to the user of the cluster.
