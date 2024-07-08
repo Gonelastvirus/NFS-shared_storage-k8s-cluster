@@ -14,19 +14,19 @@ So, even if your WordPress container moves from one Mac Mini to another, it stil
 
 When you start using multiple nodes in a Kubernetes cluster, storing data becomes tricky. Here's why:
 
-    Single Node Setup:
-        If you have a single-node Kubernetes setup, storing data is easy. You can use a "host path" volume, which means the data is stored on the same machine as the application. So, if your app restarts, it always finds the data because everything is on the same node.
+<b>1. Single Node Setup:</b>
+    If you have a single-node Kubernetes setup, storing data is easy. You can use a "host path" volume, which means the data is stored on the same machine as the application. So, if your app restarts, it always finds the data because everything is on the same node.
 
-    Multi-Node Setup:
-        Things get complicated when you add more nodes. For example, if you have a two-node cluster:
-            Issue 1: Volume Availability
-            Imagine you have an app running on node 1 with its data stored on node 1. If the app gets moved to node 2 (maybe node 1 is too busy), the app on node 2 can't find its data because the data is still on node 1.
-                Example: You have a web app running on node 1 that stores images. If Kubernetes moves this app to node 2 due to high load on node 1, the app on node 2 won't find the images since they are still stored on node 1.
-            Issue 2: Scaling Problems
-            If you want to run multiple instances of the same app (one on each node), you face two problems:
-                Unavailable Volume: The new instance on node 2 still can't access the data stored on node 1.
-                Read-Write Restrictions: Even if the data is accessible from both nodes, only one instance can write to the volume at a time.
-                Example: You scale your web app to run on both nodes. The app on node 2 can't access the images stored on node 1. Even if both instances could access the images, only one of them can upload new images because of the read-write restriction.
+<b>2. Multi-Node Setup:</b>
+    Things get complicated when you add more nodes. For example, if you have a two-node cluster:
+      <b>  Issue 1: Volume Availability</b>
+        Imagine you have an app running on node 1 with its data stored on node 1. If the app gets moved to node 2 (maybe node 1 is too busy), the app on node 2 can't find its data because the data is still on node 1.
+            Example: You have a web app running on node 1 that stores images. If Kubernetes moves this app to node 2 due to high load on node 1, the app on node 2 won't find the images since they are still stored on node 1.
+      <b>  Issue 2: Scaling Problems</b>
+        If you want to run multiple instances of the same app (one on each node), you face two problems:
+            Unavailable Volume: The new instance on node 2 still can't access the data stored on node 1.
+            Read-Write Restrictions: Even if the data is accessible from both nodes, only one instance can write to the volume at a time.
+            Example: You scale your web app to run on both nodes. The app on node 2 can't access the images stored on node 1. Even if both instances could access the images, only one of them can upload new images because of the read-write restriction.
 
 In short, with multiple nodes, managing storage becomes challenging because of issues with data availability and write permissions.
 
