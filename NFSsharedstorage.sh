@@ -67,7 +67,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: $pvc_name
-  namespace: has
 spec:
   accessModes:
     - ReadWriteMany
