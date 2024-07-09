@@ -7,8 +7,22 @@ pvc_name=""
 storage_class_name=""
 storage_size=""
 
-# Install NFS CSI driver v4.7.0 using remote install method
-curl -skSL https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/v4.7.0/deploy/install-driver.sh | bash -s v4.7.0 --
+# Function to check if NFS CSI driver is installed
+is_csi_driver_installed() {
+    local controller_pods=$(kubectl -n kube-system get pod -l app=csi-nfs-controller -o jsonpath='{.items[*].metadata.name}')
+    local node_pods=$(kubectl -n kube-system get pod -l app=csi-nfs-node -o jsonpath='{.items[*].metadata.name}')
+    
+    if [[ -z "$controller_pods" || -z "$node_pods" ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+# Function to install NFS CSI driver v4.7.0 using remote install method
+install_csi_driver() {
+    curl -skSL https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/v4.7.0/deploy/install-driver.sh | bash -s v4.7.0 --
+}
 
 # Function to check pods status
 check_pods_status() {
@@ -82,6 +96,14 @@ EOF
     echo "StorageClass and PVC created successfully."
 }
 
+# Check if CSI driver is already installed
+if is_csi_driver_installed; then
+    echo "CSI driver is already installed. Skipping installation."
+else
+    echo "CSI driver not found. Installing..."
+    install_csi_driver
+fi
+
 # Call function to prompt user input
 prompt_user_input
 
@@ -93,4 +115,3 @@ create_storage_class_and_pvc
 
 # Add any additional steps here after StorageClass and PVC creation
 echo "Storage setup complete. Proceeding with additional steps."
-
